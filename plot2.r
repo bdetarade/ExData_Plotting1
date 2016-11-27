@@ -17,7 +17,7 @@ ds2 <- read.csv.sql("household_power_consumption.txt",
                     header = TRUE, 
                     sep = ";")
 ds2$Day <- weekdays(as.Date(ds2$Date))
-ds2$DateTime <- dmy_hms(paste(ds2$Date, ds2$Time))
+ds2$DateTime <- as.POSIXct(paste(ds2$Date, ds2$Time))
 
 
 ds2$Global_active_power <- as.numeric(ds2$Global_active_power)
@@ -29,10 +29,7 @@ ds2$Voltage <- as.numeric(ds2$Voltage)
 par(mfrow = c(1,1))
 
 
-plot( x= ds2$DateTime, y=ds2$Global_active_power / 1000, type = "o", pch = NA, axes=FALSE, ann=FALSE)
-axis(1, at=c(ymd_hms("2007-02-01 00:00:00"),ymd_hms("2007-02-02 00:00:00"),ymd_hms("2007-02-02 23:59:00")), lab=c("Thu", "Fri", "Sat"))
-axis(2, lab=c(0,2,4,6), at=c(0,1,2,3))
-box()
+plot( ds2$Global_active_power ~ ds2$DateTime, type = "o", pch = NA, ann=FALSE)
 title(ylab="Global Active Power (kilowatts)" )
 dev.copy(png, "plot2.png", width = 480, height = 480)
 dev.off()

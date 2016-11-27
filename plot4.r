@@ -18,7 +18,7 @@ ds2 <- read.csv.sql("household_power_consumption.txt",
                     sep = ";")
 
 ds2$Day <- weekdays(as.Date(ds2$Date))
-ds2$DateTime <- dmy_hms(paste(ds2$Date, ds2$Time))
+ds2$DateTime <- as.POSIXct(paste(ds2$Date, ds2$Time))
 
 
 
@@ -31,34 +31,22 @@ ds2$Voltage <- as.numeric(ds2$Voltage)
 par(mfrow = c(2,2))
 
 
-plot( x= ds2$DateTime, y=ds2$Global_active_power / 1000, type = "o", pch = NA, axes=FALSE, ann=FALSE)
-axis(1, at=c(ymd_hms("2007-02-01 00:00:00"),ymd_hms("2007-02-02 00:00:00"),ymd_hms("2007-02-02 23:59:00")), lab=c("Thu", "Fri", "Sat"))
-axis(2, lab=c(0,2,4,6), at=c(0,1,2,3))
-box()
+plot( ds2$Global_active_power ~ ds2$DateTime, type = "o", pch = NA, ann=FALSE)
 title(ylab="Global Active Power" )
 
-plot(x= ds2$DateTime , y=ds2$Voltage, type = "o", pch = NA, axes=FALSE, ann=FALSE)
-axis(1, at=c(ymd_hms("2007-02-01 00:00:00"),ymd_hms("2007-02-02 00:00:00"),ymd_hms("2007-02-02 23:59:00")), lab=c("Thu", "Fri", "Sat"))
-axis(2, at=c(800,1000,1200,1400,1600,1800,2000,2200), lab=c("234","","238","","242","","246",""))
-box()
+plot(ds2$Voltage~ds2$DateTime, type = "o", pch = NA,  ann=FALSE)
 title(ylab="Voltage" )
 title(xlab="datetime" )
 
 
-plot( x= ds2$DateTime, y=ds2$Sub_metering_1, type = "o", pch = NA, axes=FALSE, ann=FALSE)
-lines(x= ds2$DateTime, y= ds2$Sub_metering_2, type = "o", pch = NA, col="red")
-lines(x= ds2$DateTime, y=ds2$Sub_metering_3, type = "o", pch = NA, col="blue")
-axis(1, at=c(ymd_hms("2007-02-01 00:00:00"),ymd_hms("2007-02-02 00:00:00"),ymd_hms("2007-02-02 23:59:00")), lab=c("Thu", "Fri", "Sat"))
-axis(2, lab=c(0,10,20,30), at=c(2,10,20,30))
+plot( ds2$Sub_metering_1 ~ds2$DateTime, type = "o", pch = NA, ann=FALSE)
+lines(ds2$Sub_metering_2 ~ds2$DateTime, type = "o", pch = NA, col="red")
+lines(ds2$Sub_metering_3~ds2$DateTime, type = "o", pch = NA, col="blue")
 title(ylab="Energy sub metering" )
 legend("topright", col=c("black", "red", "blue"), legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"), lty=1 )
-box()
 
 
-plot(x= ds2$DateTime , y=ds2$Global_reactive_power, type = "o", pch = NA, axes=FALSE, ann=FALSE)
-axis(1, at=c(ymd_hms("2007-02-01 00:00:00"),ymd_hms("2007-02-02 00:00:00"),ymd_hms("2007-02-02 23:59:00")), lab=c("Thu", "Fri", "Sat"))
-axis(2, at=c(0,50,100,150,200,250), lab=c("0.0","0.1","0.2","0.3","0.4","0.5"))
-box()
+plot(ds2$Global_reactive_power~ds2$DateTime, type = "o", pch = NA, ann=FALSE)
 title(ylab="Global_reactive_power" )
 title(xlab="datetime" )
 
