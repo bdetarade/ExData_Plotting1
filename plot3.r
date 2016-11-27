@@ -1,8 +1,22 @@
+
+if (!require("sqldf")) {
+  install.packages("sqldf")
+}
+
+if (!require("lubridate")) {
+  install.packages("lubridate")
+}
+
+
 library(lubridate)
+library(sqldf)
 
-ds <- read.csv("household_power_consumption.txt", sep=";")
 
-ds2 <- ds[ds$Date == "1/2/2007" | ds$Date == "2/2/2007",]
+ds2 <- read.csv.sql("household_power_consumption.txt", 
+                    sql = "select * from file where Date in ('1/2/2007', '2/2/2007')", 
+                    header = TRUE, 
+                    sep = ";")
+
 ds2$Day <- weekdays(as.Date(ds2$Date))
 ds2$DateTime <- dmy_hms(paste(ds2$Date, ds2$Time))
 
